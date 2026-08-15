@@ -2,457 +2,573 @@
 <html lang="zh-CN">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>冰箱台账 · Fridge Ledger</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap"
-        rel="stylesheet">
-    <style>
-        :root {
-            --bg: #EEF3F2;
-            --surface: #FFFFFF;
-            --ink: #1B2B29;
-            --muted: #6E827D;
-            --line: #D7E2DF;
-            --fresh: #3F7D5C;
-            --fresh-bg: #E4F0E9;
-            --warn: #C97A2E;
-            --warn-bg: #FBEBD9;
-            --danger: #BD4438;
-            --danger-bg: #FBE2DE;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>冰箱台账 · Fridge Ledger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #EEF3F2;
+      --surface: #FFFFFF;
+      --ink: #1B2B29;
+      --muted: #6E827D;
+      --line: #D7E2DF;
+      --fresh: #3F7D5C;
+      --fresh-bg: #E4F0E9;
+      --warn: #C97A2E;
+      --warn-bg: #FBEBD9;
+      --danger: #BD4438;
+      --danger-bg: #FBE2DE;
+    }
 
-        * {
-            box-sizing: border-box;
-        }
+    * {
+      box-sizing: border-box;
+    }
 
-        body {
-            margin: 0;
-            background: var(--bg);
-            color: var(--ink);
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-        }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+    }
 
-        .wrap {
-            max-width: 780px;
-            margin: 0 auto;
-            padding: 48px 24px 80px;
-        }
+    .wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            border-bottom: 2px solid var(--ink);
-            padding-bottom: 16px;
-            margin-bottom: 8px;
-        }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 2px solid var(--ink);
+      padding-bottom: 16px;
+      margin-bottom: 8px;
+    }
 
-        h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            font-size: 30px;
-            letter-spacing: -0.02em;
-            margin: 0;
-        }
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 30px;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
 
-        h1 span {
-            color: var(--fresh);
-        }
+    h1 span {
+      color: var(--fresh);
+    }
 
-        .subtitle {
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 12px;
-            color: var(--muted);
-            margin-top: 4px;
-        }
+    .subtitle {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
 
-        .stamp {
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 12px;
-            color: var(--muted);
-            text-align: right;
-        }
+    .stamp {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      text-align: right;
+    }
 
-        .stamp b {
-            color: var(--ink);
-            font-size: 20px;
-            display: block;
-            font-weight: 600;
-        }
+    .stamp b {
+      color: var(--ink);
+      font-size: 20px;
+      display: block;
+      font-weight: 600;
+    }
 
-        form {
-            background: var(--surface);
-            border: 1px solid var(--line);
-            border-radius: 14px;
-            padding: 20px;
-            margin: 28px 0 36px;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr auto;
-            gap: 12px;
-            align-items: end;
-        }
+    form {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px;
+      margin: 28px 0 36px;
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+    }
 
-        .field {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
 
-        label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: var(--muted);
-            font-weight: 500;
-        }
+    label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      font-weight: 500;
+    }
 
-        input,
-        select {
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            padding: 10px 12px;
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            background: var(--bg);
-            color: var(--ink);
-        }
+    input,
+    select {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--ink);
+    }
 
-        input:focus,
-        select:focus,
-        button:focus {
-            outline: 2px solid var(--fresh);
-            outline-offset: 1px;
-        }
+    input:focus,
+    select:focus,
+    button:focus {
+      outline: 2px solid var(--fresh);
+      outline-offset: 1px;
+    }
 
-        button {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            font-size: 14px;
-            background: var(--ink);
-            color: var(--bg);
-            border: none;
-            border-radius: 8px;
-            padding: 11px 20px;
-            cursor: pointer;
-            transition: transform 0.12s ease, background 0.12s ease;
-        }
+    button {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      background: var(--ink);
+      color: var(--bg);
+      border: none;
+      border-radius: 8px;
+      padding: 11px 20px;
+      cursor: pointer;
+      transition: transform 0.12s ease, background 0.12s ease;
+    }
 
-        button:hover {
-            background: var(--fresh);
-        }
+    button:hover {
+      background: var(--fresh);
+    }
 
-        button:active {
-            transform: scale(0.97);
-        }
+    button:active {
+      transform: scale(0.97);
+    }
 
-        .section-label {
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--muted);
-            margin: 0 0 12px 2px;
-            display: flex;
-            justify-content: space-between;
-        }
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin: 0 0 12px 2px;
+      display: flex;
+      justify-content: space-between;
+    }
 
-        .list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0 20px;
+    }
 
-        .item {
-            background: var(--surface);
-            border: 1px solid var(--line);
-            border-left: 6px solid var(--fresh);
-            border-radius: 10px;
-            padding: 14px 16px;
-            display: grid;
-            grid-template-columns: 1fr auto auto;
-            align-items: center;
-            gap: 16px;
-            animation: rise 0.25s ease;
-        }
+    .filter-chip {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
 
-        @keyframes rise {
-            from {
-                opacity: 0;
-                transform: translateY(6px);
-            }
+    .filter-chip:hover {
+      border-color: var(--fresh);
+      color: var(--fresh);
+    }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    .filter-chip.active {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--bg);
+    }
 
-        .item.warn {
-            border-left-color: var(--warn);
-        }
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-        .item.danger {
-            border-left-color: var(--danger);
-        }
+    .item {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--fresh);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+      gap: 16px;
+      animation: rise 0.25s ease;
+    }
 
-        .item-name {
-            font-weight: 600;
-            font-size: 15px;
-        }
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
 
-        .item-meta {
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 11px;
-            color: var(--muted);
-            margin-top: 2px;
-        }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-        .badge {
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 6px 10px;
-            border-radius: 6px;
-            white-space: nowrap;
-            background: var(--fresh-bg);
-            color: var(--fresh);
-        }
+    .item.warn {
+      border-left-color: var(--warn);
+    }
 
-        .item.warn .badge {
-            background: var(--warn-bg);
-            color: var(--warn);
-        }
+    .item.danger {
+      border-left-color: var(--danger);
+    }
 
-        .item.danger .badge {
-            background: var(--danger-bg);
-            color: var(--danger);
-        }
+    .item-name {
+      font-weight: 600;
+      font-size: 15px;
+    }
 
-        .del {
-            background: none;
-            border: none;
-            color: var(--muted);
-            font-size: 18px;
-            cursor: pointer;
-            padding: 4px 8px;
-            line-height: 1;
-        }
+    .item-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
 
-        .del:hover {
-            color: var(--danger);
-        }
+    .item-category {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      background: var(--bg);
+      border: 1px solid var(--line);
+      padding: 2px 8px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-top: 6px;
+    }
 
-        .empty {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--muted);
-            border: 1px dashed var(--line);
-            border-radius: 14px;
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 13px;
-        }
+    .badge {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+      background: var(--fresh-bg);
+      color: var(--fresh);
+    }
 
-        .empty b {
-            display: block;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 17px;
-            color: var(--ink);
-            margin-bottom: 6px;
-        }
+    .item.warn .badge {
+      background: var(--warn-bg);
+      color: var(--warn);
+    }
 
-        @media (max-width: 640px) {
-            form {
-                grid-template-columns: 1fr 1fr;
-            }
+    .item.danger .badge {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
 
-            form button {
-                grid-column: 1 / -1;
-            }
+    .del {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 18px;
+      cursor: pointer;
+      padding: 4px 8px;
+      line-height: 1;
+    }
 
-            .item {
-                grid-template-columns: 1fr auto;
-            }
+    .del:hover {
+      color: var(--danger);
+    }
 
-            .del {
-                grid-column: 1 / -1;
-                justify-self: end;
-                margin-top: -6px;
-            }
-        }
-    </style>
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+    }
+
+    .empty b {
+      display: block;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 17px;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    @media (max-width: 640px) {
+      form {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      form .field:first-child {
+        grid-column: 1 / -1;
+      }
+
+      form button {
+        grid-column: 1 / -1;
+      }
+
+      .item {
+        grid-template-columns: 1fr auto;
+      }
+
+      .del {
+        grid-column: 1 / -1;
+        justify-self: end;
+        margin-top: -6px;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <div class="wrap">
-        <header>
-            <div>
-                <h1>冰箱<span>台账</span></h1>
-                <div class="subtitle">FRIDGE LEDGER — 记录每一样食材的保鲜倒计时</div>
-            </div>
-            <div class="stamp">今日<b id="todayStamp"></b></div>
-        </header>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>冰箱<span>台账</span></h1>
+        <div class="subtitle">FRIDGE LEDGER — 记录每一样食材的保鲜倒计时</div>
+      </div>
+      <div class="stamp">今日<b id="todayStamp"></b></div>
+    </header>
 
-        <form id="addForm">
-            <div class="field" style="grid-column: 1 / 2;">
-                <label for="name">食材名称</label>
-                <input list="presets" id="name" placeholder="例如：牛奶" required>
-                <datalist id="presets"></datalist>
-            </div>
-            <div class="field">
-                <label for="purchaseDate">购买日期</label>
-                <input type="date" id="purchaseDate" required>
-            </div>
-            <div class="field">
-                <label for="shelfLife">保质天数</label>
-                <input type="number" id="shelfLife" min="0" placeholder="7" required>
-            </div>
-            <button type="submit">添加</button>
-        </form>
+    <form id="addForm">
+      <div class="field">
+        <label for="name">食材名称</label>
+        <input list="presets" id="name" placeholder="例如：牛奶" required>
+        <datalist id="presets"></datalist>
+      </div>
+      <div class="field">
+        <label for="category">分类</label>
+        <select id="category"></select>
+      </div>
+      <div class="field">
+        <label for="purchaseDate">购买日期</label>
+        <input type="date" id="purchaseDate" required>
+      </div>
+      <div class="field">
+        <label for="shelfLife">保质天数</label>
+        <input type="number" id="shelfLife" min="0" placeholder="7" required>
+      </div>
+      <button type="submit">添加</button>
+    </form>
 
-        <div class="section-label">
-            <span id="listLabel">冰箱里的食材</span>
-            <span id="listCount"></span>
-        </div>
+    <div class="filters" id="filters"></div>
 
-        <div class="list" id="list"></div>
+    <div class="section-label">
+      <span id="listLabel">冰箱里的食材</span>
+      <span id="listCount"></span>
     </div>
 
-    <script>
-        const PRESETS = {
-            "牛奶": 7, "鸡蛋": 21, "酸奶": 14, "生鸡肉": 2, "生猪肉": 3,
-            "生牛肉": 3, "叶菜": 4, "根茎类蔬菜": 14, "豆腐": 5, "剩菜": 3,
-            "面包": 5, "水果": 6, "芝士": 21, "黄油": 30
-        };
+    <div class="list" id="list"></div>
+  </div>
 
-        const presetList = document.getElementById('presets');
-        Object.keys(PRESETS).forEach(name => {
-            const opt = document.createElement('option');
-            opt.value = name;
-            presetList.appendChild(opt);
+  <script>
+    const CATEGORIES = ["蔬菜水果", "肉类海鲜", "蛋奶豆制品", "主食烘焙", "调味料", "剩菜", "其他"];
+
+    const PRESETS = {
+      "牛奶": { days: 7, category: "蛋奶豆制品" },
+      "鸡蛋": { days: 21, category: "蛋奶豆制品" },
+      "酸奶": { days: 14, category: "蛋奶豆制品" },
+      "豆腐": { days: 5, category: "蛋奶豆制品" },
+      "芝士": { days: 21, category: "蛋奶豆制品" },
+      "黄油": { days: 30, category: "蛋奶豆制品" },
+      "生鸡肉": { days: 2, category: "肉类海鲜" },
+      "生猪肉": { days: 3, category: "肉类海鲜" },
+      "生牛肉": { days: 3, category: "肉类海鲜" },
+      "叶菜": { days: 4, category: "蔬菜水果" },
+      "根茎类蔬菜": { days: 14, category: "蔬菜水果" },
+      "水果": { days: 6, category: "蔬菜水果" },
+      "面包": { days: 5, category: "主食烘焙" },
+      "剩菜": { days: 3, category: "剩菜" }
+    };
+
+    const presetList = document.getElementById('presets');
+    Object.keys(PRESETS).forEach(name => {
+      const opt = document.createElement('option');
+      opt.value = name;
+      presetList.appendChild(opt);
+    });
+
+    const categorySelect = document.getElementById('category');
+    CATEGORIES.forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat;
+      opt.textContent = cat;
+      categorySelect.appendChild(opt);
+    });
+
+    const nameInput = document.getElementById('name');
+    const shelfInput = document.getElementById('shelfLife');
+    nameInput.addEventListener('input', () => {
+      const preset = PRESETS[nameInput.value];
+      if (preset && !shelfInput.value) {
+        shelfInput.value = preset.days;
+        categorySelect.value = preset.category;
+      }
+    });
+
+    const dateInput = document.getElementById('purchaseDate');
+    const todayISO = new Date().toISOString().slice(0, 10);
+    dateInput.value = todayISO;
+    document.getElementById('todayStamp').textContent =
+      new Date().toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+
+    const STORAGE_KEY = 'fridge-ledger-items';
+
+    function loadItems() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveItems(items) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+
+    function daysRemaining(purchaseDate, shelfLife) {
+      const purchase = new Date(purchaseDate + 'T00:00:00');
+      const expiry = new Date(purchase.getTime() + shelfLife * 86400000);
+      const today = new Date(todayISO + 'T00:00:00');
+      return Math.round((expiry - today) / 86400000);
+    }
+
+    function statusOf(days) {
+      if (days <= 0) return 'danger';
+      if (days <= 2) return 'warn';
+      return 'ok';
+    }
+
+    function labelOf(days) {
+      if (days < 0) return `已过期 ${Math.abs(days)} 天`;
+      if (days === 0) return '今天到期';
+      return `剩 ${days} 天`;
+    }
+
+    let activeFilter = '全部';
+
+    function renderFilters(items) {
+      const filtersEl = document.getElementById('filters');
+      filtersEl.innerHTML = '';
+
+      const counts = { '全部': items.length };
+      CATEGORIES.forEach(cat => {
+        counts[cat] = items.filter(it => (it.category || '其他') === cat).length;
+      });
+
+      const options = ['全部', ...CATEGORIES.filter(cat => counts[cat] > 0)];
+      options.forEach(cat => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'filter-chip' + (activeFilter === cat ? ' active' : '');
+        chip.textContent = `${cat} · ${counts[cat]}`;
+        chip.addEventListener('click', () => {
+          activeFilter = cat;
+          render();
         });
+        filtersEl.appendChild(chip);
+      });
+    }
 
-        const nameInput = document.getElementById('name');
-        const shelfInput = document.getElementById('shelfLife');
-        nameInput.addEventListener('input', () => {
-            if (PRESETS[nameInput.value] && !shelfInput.value) {
-                shelfInput.value = PRESETS[nameInput.value];
-            }
-        });
+    function render() {
+      const allItems = loadItems();
+      const list = document.getElementById('list');
+      const countEl = document.getElementById('listCount');
+      list.innerHTML = '';
 
-        const dateInput = document.getElementById('purchaseDate');
-        const todayISO = new Date().toISOString().slice(0, 10);
-        dateInput.value = todayISO;
-        document.getElementById('todayStamp').textContent =
-            new Date().toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+      renderFilters(allItems);
 
-        const STORAGE_KEY = 'fridge-ledger-items';
+      if (allItems.length === 0) {
+        list.innerHTML = `<div class="empty"><b>冰箱是空的</b>在上面添加第一样食材，开始记录保鲜期吧</div>`;
+        countEl.textContent = '';
+        return;
+      }
 
-        function loadItems() {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                return raw ? JSON.parse(raw) : [];
-            } catch (e) {
-                return [];
-            }
-        }
+      const items = activeFilter === '全部'
+        ? allItems
+        : allItems.filter(it => (it.category || '其他') === activeFilter);
 
-        function saveItems(items) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-        }
+      const withDays = items.map(it => ({
+        ...it,
+        days: daysRemaining(it.purchaseDate, it.shelfLife)
+      })).sort((a, b) => a.days - b.days);
 
-        function daysRemaining(purchaseDate, shelfLife) {
-            const purchase = new Date(purchaseDate + 'T00:00:00');
-            const expiry = new Date(purchase.getTime() + shelfLife * 86400000);
-            const today = new Date(todayISO + 'T00:00:00');
-            return Math.round((expiry - today) / 86400000);
-        }
+      countEl.textContent = `共 ${items.length} 项`;
 
-        function statusOf(days) {
-            if (days <= 0) return 'danger';
-            if (days <= 2) return 'warn';
-            return 'ok';
-        }
+      if (withDays.length === 0) {
+        list.innerHTML = `<div class="empty"><b>这个分类是空的</b>换个分类看看，或者去上面添加食材吧</div>`;
+        return;
+      }
 
-        function labelOf(days) {
-            if (days < 0) return `已过期 ${Math.abs(days)} 天`;
-            if (days === 0) return '今天到期';
-            return `剩 ${days} 天`;
-        }
-
-        function render() {
-            const items = loadItems();
-            const list = document.getElementById('list');
-            const countEl = document.getElementById('listCount');
-            list.innerHTML = '';
-
-            if (items.length === 0) {
-                list.innerHTML = `<div class="empty"><b>冰箱是空的</b>在上面添加第一样食材，开始记录保鲜期吧</div>`;
-                countEl.textContent = '';
-                return;
-            }
-
-            const withDays = items.map(it => ({
-                ...it,
-                days: daysRemaining(it.purchaseDate, it.shelfLife)
-            })).sort((a, b) => a.days - b.days);
-
-            countEl.textContent = `共 ${items.length} 项`;
-
-            withDays.forEach(it => {
-                const status = statusOf(it.days);
-                const div = document.createElement('div');
-                div.className = 'item' + (status === 'ok' ? '' : ' ' + status);
-                div.innerHTML = `
+      withDays.forEach(it => {
+        const status = statusOf(it.days);
+        const div = document.createElement('div');
+        div.className = 'item' + (status === 'ok' ? '' : ' ' + status);
+        div.innerHTML = `
         <div>
           <div class="item-name">${escapeHtml(it.name)}</div>
           <div class="item-meta">购于 ${it.purchaseDate} · 保质 ${it.shelfLife} 天</div>
+          <div class="item-category">${escapeHtml(it.category || '其他')}</div>
         </div>
         <div class="badge">${labelOf(it.days)}</div>
         <button class="del" title="删除" data-id="${it.id}">✕</button>
       `;
-                list.appendChild(div);
-            });
+        list.appendChild(div);
+      });
 
-            list.querySelectorAll('.del').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = btn.getAttribute('data-id');
-                    const next = loadItems().filter(it => String(it.id) !== id);
-                    saveItems(next);
-                    render();
-                });
-            });
-        }
-
-        function escapeHtml(str) {
-            const div = document.createElement('div');
-            div.textContent = str;
-            return div.innerHTML;
-        }
-
-        document.getElementById('addForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = nameInput.value.trim();
-            const purchaseDate = dateInput.value;
-            const shelfLife = parseInt(shelfInput.value, 10);
-            if (!name || !purchaseDate || isNaN(shelfLife)) return;
-
-            const items = loadItems();
-            items.push({ id: Date.now(), name, purchaseDate, shelfLife });
-            saveItems(items);
-
-            nameInput.value = '';
-            shelfInput.value = '';
-            dateInput.value = todayISO;
-            nameInput.focus();
-            render();
+      list.querySelectorAll('.del').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          const next = loadItems().filter(it => String(it.id) !== id);
+          saveItems(next);
+          render();
         });
+      });
+    }
 
-        render();
-    </script>
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    document.getElementById('addForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = nameInput.value.trim();
+      const category = categorySelect.value || '其他';
+      const purchaseDate = dateInput.value;
+      const shelfLife = parseInt(shelfInput.value, 10);
+      if (!name || !purchaseDate || isNaN(shelfLife)) return;
+
+      const items = loadItems();
+      items.push({ id: Date.now(), name, category, purchaseDate, shelfLife });
+      saveItems(items);
+
+      nameInput.value = '';
+      shelfInput.value = '';
+      categorySelect.value = CATEGORIES[0];
+      dateInput.value = todayISO;
+      nameInput.focus();
+      render();
+    });
+
+    render();
+  </script>
 </body>
 
 </html>
