@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>冰箱台账 · Fridge Ledger</title>
+  <title>Fridge Ledger</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link
     href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap"
@@ -354,81 +354,82 @@
   <div class="wrap">
     <header>
       <div>
-        <h1>冰箱<span>台账</span></h1>
-        <div class="subtitle">FRIDGE LEDGER — 记录每一样食材的保鲜倒计时</div>
+        <h1>Fridge<span>Ledger</span></h1>
+        <div class="subtitle">FRIDGE LEDGER — track every item's freshness countdown</div>
       </div>
-      <div class="stamp">今日<b id="todayStamp"></b></div>
+      <div class="stamp">Today<b id="todayStamp"></b></div>
     </header>
 
     <form id="addForm">
       <div class="field field-name">
-        <label for="name">食材名称</label>
-        <input list="presets" id="name" placeholder="例如：牛奶" required>
+        <label for="name">Item name</label>
+        <input list="presets" id="name" placeholder="e.g. Milk" required>
         <datalist id="presets"></datalist>
       </div>
       <div class="field">
-        <label for="category">分类</label>
+        <label for="category">Category</label>
         <select id="category"></select>
       </div>
       <div class="field">
-        <label for="purchaseDate">购买日期</label>
+        <label for="purchaseDate">Purchase Day</label>
         <input type="date" id="purchaseDate" required>
       </div>
       <div class="field">
-        <label for="shelfLife">保质天数</label>
+        <label for="shelfLife">Days to Expire</label>
         <input type="number" id="shelfLife" min="0" placeholder="7" required>
       </div>
       <div class="field field-qty">
-        <label for="quantity">数量</label>
+        <label for="quantity">Qty</label>
         <input type="number" id="quantity" min="0" step="1" value="1" required>
       </div>
       <div class="field field-unit">
-        <label for="unit">单位</label>
+        <label for="unit">Unit</label>
         <input list="units" id="unit" placeholder="个">
         <datalist id="units"></datalist>
       </div>
-      <button type="submit">添加</button>
+      <button type="submit">Add</button>
     </form>
 
     <div class="filters" id="filters"></div>
 
     <div class="section-label">
-      <span id="listLabel">冰箱里的食材</span>
+      <span id="listLabel">In the Fridge</span>
       <span id="listCount"></span>
     </div>
 
     <div class="list" id="list"></div>
   </div>
 
-  <script>
-    const CATEGORIES = ["蔬菜水果", "肉类海鲜", "蛋奶豆制品", "主食烘焙", "调味料", "剩菜", "其他"];
 
-    const UNITS = ["个", "瓶", "盒", "包", "块", "把", "份", "克", "kg", "L", "ml"];
+
+  const unitList = document.getElementById('units');
+  UNITS.forEach(u => {
+  const opt = document.createElement('option');
+  opt.value = u;
+  unitList.appendChild(opt);
+  });
+
+  <script>
+    const CATEGORIES = ["Produce", "Meat & Seafood", "Dairy & Eggs", "Bakery & Grains", "Condiments", "Leftovers", "Other"];
+
+    const UNITS = ["pc", "bottle", "box", "pack", "block", "bunch", "portion", "g", "kg", "L", "ml"];
 
     const PRESETS = {
-      "牛奶": { days: 7, category: "蛋奶豆制品", unit: "瓶" },
-      "鸡蛋": { days: 21, category: "蛋奶豆制品", unit: "个" },
-      "酸奶": { days: 14, category: "蛋奶豆制品", unit: "盒" },
-      "豆腐": { days: 5, category: "蛋奶豆制品", unit: "盒" },
-      "芝士": { days: 21, category: "蛋奶豆制品", unit: "块" },
-      "黄油": { days: 30, category: "蛋奶豆制品", unit: "块" },
-      "生鸡肉": { days: 2, category: "肉类海鲜", unit: "克" },
-      "生猪肉": { days: 3, category: "肉类海鲜", unit: "克" },
-      "生牛肉": { days: 3, category: "肉类海鲜", unit: "克" },
-      "叶菜": { days: 4, category: "蔬菜水果", unit: "把" },
-      "根茎类蔬菜": { days: 14, category: "蔬菜水果", unit: "个" },
-      "水果": { days: 6, category: "蔬菜水果", unit: "个" },
-      "面包": { days: 5, category: "主食烘焙", unit: "个" },
-      "剩菜": { days: 3, category: "剩菜", unit: "份" }
+      "Milk": { days: 7, category: "Dairy & Eggs", unit: "bottle" },
+      "Eggs": { days: 21, category: "Dairy & Eggs", unit: "pc" },
+      "Yogurt": { days: 14, category: "Dairy & Eggs", unit: "box" },
+      "Tofu": { days: 5, category: "Dairy & Eggs", unit: "box" },
+      "Cheese": { days: 21, category: "Dairy & Eggs", unit: "block" },
+      "Butter": { days: 30, category: "Dairy & Eggs", unit: "block" },
+      "Raw chicken": { days: 2, category: "Meat & Seafood", unit: "g" },
+      "Raw pork": { days: 3, category: "Meat & Seafood", unit: "g" },
+      "Raw beef": { days: 3, category: "Meat & Seafood", unit: "g" },
+      "Leafy greens": { days: 4, category: "Produce", unit: "bunch" },
+      "Root vegetables": { days: 14, category: "Produce", unit: "pc" },
+      "Fruit": { days: 6, category: "Produce", unit: "pc" },
+      "Bread": { days: 5, category: "Bakery & Grains", unit: "pc" },
+      "Leftovers": { days: 3, category: "Leftovers", unit: "portion" }
     };
-
-    const unitList = document.getElementById('units');
-    UNITS.forEach(u => {
-      const opt = document.createElement('option');
-      opt.value = u;
-      unitList.appendChild(opt);
-    });
-
     const presetList = document.getElementById('presets');
     Object.keys(PRESETS).forEach(name => {
       const opt = document.createElement('option');
@@ -492,23 +493,23 @@
     }
 
     function labelOf(days) {
-      if (days < 0) return `已过期 ${Math.abs(days)} 天`;
-      if (days === 0) return '今天到期';
-      return `剩 ${days} 天`;
+      if (days < 0) return `Expired ${Math.abs(days)}d ago`;
+      if (days === 0) return 'Expires today';
+      return `${days}d left`;
     }
 
-    let activeFilter = '全部';
+    let activeFilter = 'All';
 
     function renderFilters(items) {
       const filtersEl = document.getElementById('filters');
       filtersEl.innerHTML = '';
 
-      const counts = { '全部': items.length };
+      const counts = { 'All': items.length };
       CATEGORIES.forEach(cat => {
         counts[cat] = items.filter(it => (it.category || '其他') === cat).length;
       });
 
-      const options = ['全部', ...CATEGORIES.filter(cat => counts[cat] > 0)];
+      const options = ['All', ...CATEGORIES.filter(cat => counts[cat] > 0)];
       options.forEach(cat => {
         const chip = document.createElement('button');
         chip.type = 'button';
@@ -531,38 +532,38 @@
       renderFilters(allItems);
 
       if (allItems.length === 0) {
-        list.innerHTML = `<div class="empty"><b>冰箱是空的</b>在上面添加第一样食材，开始记录保鲜期吧</div>`;
+        list.innerHTML = `<div class="empty"><b>The fridge is empty</b>Add your first item above to start tracking freshness</div>`;
         countEl.textContent = '';
         return;
       }
 
-      const items = activeFilter === '全部'
+      const items = activeFilter === 'All'
         ? allItems
-        : allItems.filter(it => (it.category || '其他') === activeFilter);
+        : allItems.filter(it => (it.category || 'Other') === activeFilter);
 
       const withDays = items.map(it => ({
         ...it,
         days: daysRemaining(it.purchaseDate, it.shelfLife)
       })).sort((a, b) => a.days - b.days);
 
-      countEl.textContent = `共 ${items.length} 项`;
+      countEl.textContent = `${items.length} items`;
 
       if (withDays.length === 0) {
-        list.innerHTML = `<div class="empty"><b>这个分类是空的</b>换个分类看看，或者去上面添加食材吧</div>`;
+        list.innerHTML = `<div class="empty"><b>Nothing in this category</b>Try another category, or add an item above</div>`;
         return;
       }
 
       withDays.forEach(it => {
         const status = statusOf(it.days);
         const qty = it.quantity ?? 1;
-        const unit = it.unit || '个';
+        const unit = it.unit || 'pc';
         const div = document.createElement('div');
         div.className = 'item' + (status === 'ok' ? '' : ' ' + status);
         div.innerHTML = `
         <div>
           <div class="item-name">${escapeHtml(it.name)}</div>
-          <div class="item-meta">购于 ${it.purchaseDate} · 保质 ${it.shelfLife} 天</div>
-          <div class="item-category">${escapeHtml(it.category || '其他')}</div>
+          <div class="item-meta">Bought ${it.purchaseDate} · Shelf life ${it.shelfLife}d</div>
+          <div class="item-category">${escapeHtml(it.category || 'Other')}</div>
           <div class="qty-stepper">
             <button type="button" class="qty-btn" data-action="dec" data-id="${it.id}">−</button>
             <span class="qty-value">${qty} ${escapeHtml(unit)}</span>
@@ -570,7 +571,7 @@
           </div>
         </div>
         <div class="badge">${labelOf(it.days)}</div>
-        <button class="del" title="删除" data-id="${it.id}">✕</button>
+        <button class="del" title="Delete" data-id="${it.id}">✕</button>
       `;
         list.appendChild(div);
       });
@@ -609,11 +610,11 @@
     document.getElementById('addForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const name = nameInput.value.trim();
-      const category = categorySelect.value || '其他';
+      const category = categorySelect.value || 'Other';
       const purchaseDate = dateInput.value;
       const shelfLife = parseInt(shelfInput.value, 10);
       const quantity = parseInt(quantityInput.value, 10);
-      const unit = unitInput.value.trim() || '个';
+      const unit = unitInput.value.trim() || 'pc';
       if (!name || !purchaseDate || isNaN(shelfLife)) return;
 
       const items = loadItems();
