@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fridge Ledger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #EEF3F2;
+      --surface: #FFFFFF;
+      --ink: #1B2B29;
+      --muted: #6E827D;
+      --line: #D7E2DF;
+      --fresh: #3F7D5C;
+      --fresh-bg: #E4F0E9;
+      --warn: #C97A2E;
+      --warn-bg: #FBEBD9;
+      --danger: #BD4438;
+      --danger-bg: #FBE2DE;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 2px solid var(--ink);
+      padding-bottom: 16px;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 30px;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+
+    h1 span {
+      color: var(--fresh);
+    }
+
+    .subtitle {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .stamp {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    .stamp b {
+      color: var(--ink);
+      font-size: 20px;
+      display: block;
+      font-weight: 600;
+    }
+
+    form {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px;
+      margin: 28px 0 36px;
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    form .field {
+      flex: 1 1 130px;
+    }
+
+    form .field.field-name {
+      flex: 1 1 180px;
+    }
+
+    form .field.field-qty {
+      flex: 0 1 90px;
+    }
+
+    form .field.field-unit {
+      flex: 0 1 100px;
+    }
+
+    form button {
+      flex: 0 0 auto;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    input,
+    select {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    input:focus,
+    select:focus,
+    button:focus {
+      outline: 2px solid var(--fresh);
+      outline-offset: 1px;
+    }
+
+    button {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      background: var(--ink);
+      color: var(--bg);
+      border: none;
+      border-radius: 8px;
+      padding: 11px 20px;
+      cursor: pointer;
+      transition: transform 0.12s ease, background 0.12s ease;
+    }
+
+    button:hover {
+      background: var(--fresh);
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin: 0 0 12px 2px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0 20px;
+    }
+
+    .filter-chip {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+
+    .filter-chip:hover {
+      border-color: var(--fresh);
+      color: var(--fresh);
+    }
+
+    .filter-chip.active {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--bg);
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .item {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--fresh);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+      gap: 16px;
+      animation: rise 0.25s ease;
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .item.warn {
+      border-left-color: var(--warn);
+    }
+
+    .item.danger {
+      border-left-color: var(--danger);
+    }
+
+    .item-name {
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .item-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .item-category {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      background: var(--bg);
+      border: 1px solid var(--line);
+      padding: 2px 8px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-top: 6px;
+    }
+
+    .badge {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+      background: var(--fresh-bg);
+      color: var(--fresh);
+    }
+
+    .item.warn .badge {
+      background: var(--warn-bg);
+      color: var(--warn);
+    }
+
+    .item.danger .badge {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .del {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 18px;
+      cursor: pointer;
+      padding: 4px 8px;
+      line-height: 1;
+    }
+
+    .del:hover {
+      color: var(--danger);
+    }
+
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+    }
+
+    .empty b {
+      display: block;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 17px;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    @media (max-width: 640px) {
+      form .field.field-name {
+        flex: 1 1 100%;
+      }
+
+      form button {
+        flex: 1 1 100%;
+      }
+
+      .item {
+        grid-template-columns: 1fr auto;
+      }
+
+      .del {
+        grid-column: 1 / -1;
+        justify-self: end;
+        margin-top: -6px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>My<span>Tracker</span></h1>
+        <div class="subtitle">Fridge Tracker — track every item's freshness countdown</div>
+      </div>
+      <div class="stamp">Today<b id="todayStamp"></b></div>
+    </header>
+
+    <form id="addForm">
+      <div class="field field-name">
+        <label for="name">Item name</label>
+        <input list="presets" id="name" placeholder="e.g. Milk" required>
+        <datalist id="presets"></datalist>
+      </div>
+      <div class="field">
+        <label for="category">Category</label>
+        <select id="category"></select>
+      </div>
+      <div class="field">
+        <label for="purchaseDate">Purchase Day</label>
+        <input type="date" id="purchaseDate" required>
+      </div>
+      <div class="field">
+        <label for="shelfLife">Days to Expire</label>
+        <input type="number" id="shelfLife" min="0" placeholder="7" required>
+      </div>
+      <div class="field field-qty">
+        <label for="quantity">Qty</label>
+        <input type="number" id="quantity" min="0" step="1" value="1" required>
+      </div>
+      <div class="field field-unit">
+        <label for="unit">Unit</label>
+        <input list="units" id="unit" placeholder="个">
+        <datalist id="units"></datalist>
+      </div>
+      <button type="submit">Add</button>
+    </form>
+
+    <div class="filters" id="filters"></div>
+
+    <div class="section-label">
+      <span id="listLabel">In the Fridge</span>
+      <span id="listCount"></span>
+    </div>
+
+    <div class="list" id="list"></div>
+  </div>
+
+  <script>
+    const CATEGORIES = ["Produce", "Meat & Seafood", "Dairy & Eggs", "Bakery & Grains", "Condiments", "Leftovers", "Other"];
+
+    const UNITS = ["pc", "bottle", "box", "pack", "block", "bunch", "portion", "g", "kg", "L", "ml"];
+
+    const unitList = document.getElementById('units');
+    UNITS.forEach(u => {
+      const opt = document.createElement('option');
+      opt.value = u;
+      unitList.appendChild(opt);
+    });
+
+    const PRESETS = {
+      "Milk": { days: 7, category: "Dairy & Eggs", unit: "bottle" },
+      "Eggs": { days: 21, category: "Dairy & Eggs", unit: "pc" },
+      "Yogurt": { days: 14, category: "Dairy & Eggs", unit: "box" },
+      "Yogurt drink": { days: 10, category: "Dairy & Eggs", unit: "bottle" },
+      "Tofu": { days: 5, category: "Dairy & Eggs", unit: "box" },
+      "Cheese": { days: 21, category: "Dairy & Eggs", unit: "block" },
+      "Butter": { days: 30, category: "Dairy & Eggs", unit: "block" },
+      "Raw chicken": { days: 2, category: "Meat & Seafood", unit: "g" },
+      "Raw pork": { days: 3, category: "Meat & Seafood", unit: "g" },
+      "Raw beef": { days: 3, category: "Meat & Seafood", unit: "g" },
+      "Leafy greens": { days: 4, category: "Produce", unit: "bunch" },
+      "Root vegetables": { days: 14, category: "Produce", unit: "pc" },
+      "Fruit": { days: 6, category: "Produce", unit: "pc" },
+      "Bread": { days: 5, category: "Bakery & Grains", unit: "pc" },
+      "Leftovers": { days: 3, category: "Leftovers", unit: "portion" }
+    };
+    const presetList = document.getElementById('presets');
+    Object.keys(PRESETS).forEach(name => {
+      const opt = document.createElement('option');
+      opt.value = name;
+      presetList.appendChild(opt);
+    });
+
+    const categorySelect = document.getElementById('category');
+    CATEGORIES.forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat;
+      opt.textContent = cat;
+      categorySelect.appendChild(opt);
+    });
+
+    const unitInput = document.getElementById('unit');
+    const nameInput = document.getElementById('name');
+    const shelfInput = document.getElementById('shelfLife');
+    nameInput.addEventListener('input', () => {
+      const preset = PRESETS[nameInput.value];
+      if (preset && !shelfInput.value) {
+        shelfInput.value = preset.days;
+        categorySelect.value = preset.category;
+        unitInput.value = preset.unit;
+      }
+    });
+
+    const dateInput = document.getElementById('purchaseDate');
+    const quantityInput = document.getElementById('quantity');
+    const todayISO = new Date().toISOString().slice(0, 10);
+    dateInput.value = todayISO;
+    document.getElementById('todayStamp').textContent =
+      new Date().toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+
+    const STORAGE_KEY = 'fridge-ledger-items';
+
+    function loadItems() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveItems(items) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+
+    function daysRemaining(purchaseDate, shelfLife) {
+      const purchase = new Date(purchaseDate + 'T00:00:00');
+      const expiry = new Date(purchase.getTime() + shelfLife * 86400000);
+      const today = new Date(todayISO + 'T00:00:00');
+      return Math.round((expiry - today) / 86400000);
+    }
+
+    function statusOf(days) {
+      if (days <= 0) return 'danger';
+      if (days <= 2) return 'warn';
+      return 'ok';
+    }
+
+    function labelOf(days) {
+      if (days < 0) return `Expired ${Math.abs(days)}d ago`;
+      if (days === 0) return 'Expires today';
+      return `${days}d left`;
+    }
+
+    let activeFilter = 'All';
+
+    function renderFilters(items) {
+      const filtersEl = document.getElementById('filters');
+      filtersEl.innerHTML = '';
+
+      const counts = { 'All': items.length };
+      CATEGORIES.forEach(cat => {
+        counts[cat] = items.filter(it => (it.category || '其他') === cat).length;
+      });
+
+      const options = ['All', ...CATEGORIES.filter(cat => counts[cat] > 0)];
+      options.forEach(cat => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'filter-chip' + (activeFilter === cat ? ' active' : '');
+        chip.textContent = `${cat} · ${counts[cat]}`;
+        chip.addEventListener('click', () => {
+          activeFilter = cat;
+          render();
+        });
+        filtersEl.appendChild(chip);
+      });
+    }
+
+    function render() {
+      const allItems = loadItems();
+      const list = document.getElementById('list');
+      const countEl = document.getElementById('listCount');
+      list.innerHTML = '';
+
+      renderFilters(allItems);
+
+      if (allItems.length === 0) {
+        list.innerHTML = `<div class="empty"><b>The fridge is empty</b>Add your first item above to start tracking freshness</div>`;
+        countEl.textContent = '';
+        return;
+      }
+
+      const items = activeFilter === 'All'
+        ? allItems
+        : allItems.filter(it => (it.category || 'Other') === activeFilter);
+
+      const withDays = items.map(it => ({
+        ...it,
+        days: daysRemaining(it.purchaseDate, it.shelfLife)
+      })).sort((a, b) => a.days - b.days);
+
+      countEl.textContent = `${items.length} items`;
+
+      if (withDays.length === 0) {
+        list.innerHTML = `<div class="empty"><b>Nothing in this category</b>Try another category, or add an item above</div>`;
+        return;
+      }
+
+      withDays.forEach(it => {
+        const status = statusOf(it.days);
+        const qty = it.quantity ?? 1;
+        const unit = it.unit || 'pc';
+        const div = document.createElement('div');
+        div.className = 'item' + (status === 'ok' ? '' : ' ' + status);
+        div.innerHTML = `
+        <div>
+          <div class="item-name">${escapeHtml(it.name)}</div>
+          <div class="item-meta">Bought ${it.purchaseDate} · Shelf life ${it.shelfLife}d</div>
+          <div class="item-category">${escapeHtml(it.category || 'Other')}</div>
+          <div class="qty-stepper">
+            <button type="button" class="qty-btn" data-action="dec" data-id="${it.id}">−</button>
+            <span class="qty-value">${qty} ${escapeHtml(unit)}</span>
+            <button type="button" class="qty-btn" data-action="inc" data-id="${it.id}">+</button>
+          </div>
+        </div>
+        <div class="badge">${labelOf(it.days)}</div>
+        <button class="del" title="Delete" data-id="${it.id}">✕</button>
+      `;
+        list.appendChild(div);
+      });
+
+      list.querySelectorAll('.qty-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          const action = btn.getAttribute('data-action');
+          const next = loadItems().map(it => {
+            if (String(it.id) !== id) return it;
+            const current = it.quantity ?? 1;
+            const updated = action === 'inc' ? current + 1 : Math.max(0, current - 1);
+            return { ...it, quantity: updated };
+          });
+          saveItems(next);
+          render();
+        });
+      });
+
+      list.querySelectorAll('.del').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          const next = loadItems().filter(it => String(it.id) !== id);
+          saveItems(next);
+          render();
+        });
+      });
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    document.getElementById('addForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = nameInput.value.trim();
+      const category = categorySelect.value || 'Other';
+      const purchaseDate = dateInput.value;
+      const shelfLife = parseInt(shelfInput.value, 10);
+      const quantity = parseInt(quantityInput.value, 10);
+      const unit = unitInput.value.trim() || 'pc';
+      if (!name || !purchaseDate || isNaN(shelfLife)) return;
+
+      const items = loadItems();
+      items.push({
+        id: Date.now(),
+        name,
+        category,
+        purchaseDate,
+        shelfLife,
+        quantity: isNaN(quantity) ? 1 : quantity,
+        unit
+      });
+      saveItems(items);
+
+      nameInput.value = '';
+      shelfInput.value = '';
+      categorySelect.value = CATEGORIES[0];
+      quantityInput.value = 1;
+      unitInput.value = '';
+      dateInput.value = todayISO;
+      nameInput.focus();
+      render();
+    });
+
+    render();
+  </script>
+</body>
+
+</html>
