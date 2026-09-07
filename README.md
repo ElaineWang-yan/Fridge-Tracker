@@ -1,4 +1,4 @@
-# 🧊 Fridge Ledger · 冰箱记录器
+# 🧊 Fridge Ledger
 
 A minimal, no-backend web app for tracking food in your fridge and knowing what's about to expire — before it goes bad.
 
